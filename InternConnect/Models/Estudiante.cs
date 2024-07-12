@@ -12,4 +12,6 @@ public class Estudiante
     public string? Telefono { get; set; }
     public int? TipoDocumento { get; set; } // Permite valores nulos
     public string? Documento { get; set; }
+    public string ContraseñaHash { get; set; } 
+
 }

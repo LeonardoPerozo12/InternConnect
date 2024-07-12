@@ -30,6 +30,10 @@ namespace InternConnect.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("IDEstudiante"));
 
+                    b.Property<string>("ContraseñaHash")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Correo")
                         .HasColumnType("longtext");
 

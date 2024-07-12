@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InternConnect.Migrations
 {
     [DbContext(typeof(InternConnectContext))]
-    [Migration("20240712064036_initial")]
-    partial class initial
+    [Migration("20240712171400_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,10 @@ namespace InternConnect.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("IDEstudiante"));
+
+                    b.Property<string>("ContraseñaHash")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Correo")
                         .HasColumnType("longtext");

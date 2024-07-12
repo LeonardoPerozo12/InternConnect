@@ -17,10 +17,47 @@ namespace InternConnect.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+
+            modelBuilder.Entity("Estudiante", b =>
+                {
+                    b.Property<int>("IDEstudiante")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("IDEstudiante"));
+
+                    b.Property<string>("Correo")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Direccion")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Documento")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("IDCarrera")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IDUniversidad")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Telefono")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("TipoDocumento")
+                        .HasColumnType("int");
+
+                    b.HasKey("IDEstudiante");
+
+                    b.ToTable("Estudiantes");
+                });
 
             modelBuilder.Entity("InternConnect.Models.Aplicacion", b =>
                 {
@@ -120,8 +157,9 @@ namespace InternConnect.Migrations
                     b.Property<DateTime>("FechaIngreso")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<byte[]>("LogoEmpresa")
-                        .HasColumnType("longblob");
+                    b.Property<string>("LogoEmpresa")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("longtext");
@@ -135,59 +173,6 @@ namespace InternConnect.Migrations
                     b.HasKey("IDEmpresa");
 
                     b.ToTable("Empresas");
-                });
-
-            modelBuilder.Entity("InternConnect.Models.Estudiante", b =>
-                {
-                    b.Property<int>("IDEstudiante")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("IDEstudiante"));
-
-                    b.Property<byte[]>("CV")
-                        .IsRequired()
-                        .HasColumnType("longblob");
-
-                    b.Property<string>("Correo")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Direccion")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Documento")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("FechaIngreso")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<byte[]>("FotoEstudiante")
-                        .IsRequired()
-                        .HasColumnType("longblob");
-
-                    b.Property<int>("IDCarrera")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IDUniversidad")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Telefono")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("TipoDocumento")
-                        .HasColumnType("int");
-
-                    b.HasKey("IDEstudiante");
-
-                    b.ToTable("Estudiantes");
                 });
 
             modelBuilder.Entity("InternConnect.Models.Pasantia", b =>
@@ -270,17 +255,17 @@ namespace InternConnect.Migrations
 
             modelBuilder.Entity("InternConnect.Models.Universidad", b =>
                 {
-                    b.Property<int>("UniversidadId")
+                    b.Property<int>("IDUniversidad")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("UniversidadId"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("IDUniversidad"));
 
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("UniversidadId");
+                    b.HasKey("IDUniversidad");
 
                     b.ToTable("Universidades");
                 });

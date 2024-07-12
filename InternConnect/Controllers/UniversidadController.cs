@@ -47,7 +47,7 @@ namespace InternConnect.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUniversidad(int id, Universidad universidad)
         {
-            if (id != universidad.UniversidadId)
+            if (id != universidad.IDUniversidad)
             {
                 return BadRequest();
             }
@@ -81,7 +81,7 @@ namespace InternConnect.Controllers
             _context.Universidades.Add(universidad);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUniversidad", new { id = universidad.UniversidadId }, universidad);
+            return CreatedAtAction("GetUniversidad", new { id = universidad.IDUniversidad }, universidad);
         }
 
         // DELETE: api/Universidad/5
@@ -102,7 +102,7 @@ namespace InternConnect.Controllers
 
         private bool UniversidadExists(int id)
         {
-            return _context.Universidades.Any(e => e.UniversidadId == id);
+            return _context.Universidades.Any(e => e.IDUniversidad == id);
         }
     }
 }

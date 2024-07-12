@@ -96,7 +96,8 @@ namespace InternConnect.Migrations
                     Descripcion = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Verificacion = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    LogoEmpresa = table.Column<byte[]>(type: "longblob", nullable: true),
+                    LogoEmpresa = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaIngreso = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Contacto = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
@@ -113,21 +114,18 @@ namespace InternConnect.Migrations
                 {
                     IDEstudiante = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Nombre = table.Column<string>(type: "longtext", nullable: false)
+                    Nombre = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Correo = table.Column<string>(type: "longtext", nullable: false)
+                    Correo = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    IDUniversidad = table.Column<int>(type: "int", nullable: false),
-                    IDCarrera = table.Column<int>(type: "int", nullable: false),
-                    FotoEstudiante = table.Column<byte[]>(type: "longblob", nullable: false),
-                    FechaIngreso = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CV = table.Column<byte[]>(type: "longblob", nullable: false),
-                    Direccion = table.Column<string>(type: "longtext", nullable: false)
+                    IDUniversidad = table.Column<int>(type: "int", nullable: true),
+                    IDCarrera = table.Column<int>(type: "int", nullable: true),
+                    Direccion = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Telefono = table.Column<string>(type: "longtext", nullable: false)
+                    Telefono = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TipoDocumento = table.Column<int>(type: "int", nullable: false),
-                    Documento = table.Column<string>(type: "longtext", nullable: false)
+                    TipoDocumento = table.Column<int>(type: "int", nullable: true),
+                    Documento = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -189,14 +187,14 @@ namespace InternConnect.Migrations
                 name: "Universidades",
                 columns: table => new
                 {
-                    UniversidadId = table.Column<int>(type: "int", nullable: false)
+                    IDUniversidad = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Nombre = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Universidades", x => x.UniversidadId);
+                    table.PrimaryKey("PK_Universidades", x => x.IDUniversidad);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
         }

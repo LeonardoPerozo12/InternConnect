@@ -20,7 +20,7 @@ namespace InternConnect.Models
 
         public bool Verificacion { get; set; }
 
-        public byte[]? LogoEmpresa { get; set; } // Tipo byte[] para almacenar longblob
+        public string LogoEmpresa { get; set; } // Tipo byte[] para almacenar longblob
 
         public DateTime FechaIngreso { get; set; }
 

@@ -1,4 +1,4 @@
-﻿namespace InternDiablo.Models
+﻿namespace InternConnect.Models
 {
     public class Universidad
     {

@@ -22,8 +22,8 @@ namespace InternConnect.DTO
             // Se elimina la propiedad Verificacion del DTO
 
             // No se incluye LogoEmpresa ya que se maneja por separado en la subida de archivos
-
             [Required]
+            [DataType(DataType.Password)]
             public string ContraseñaHash { get; set; } // Usarás esta propiedad para la contraseña
         }
 
@@ -35,7 +35,7 @@ namespace InternConnect.DTO
 
             [Required]
             [DataType(DataType.Password)]
-            public string Contraseña { get; set; }
+            public string ContraseñaHash { get; set; }
         }
     }
 }

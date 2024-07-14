@@ -7,7 +7,7 @@ namespace InternConnect.Models
     {
         [Key]
         public int IDEmpresa { get; set; }
-            
+
         public string? Nombre { get; set; }
 
         public string? CorreoRRHH { get; set; }
@@ -27,5 +27,7 @@ namespace InternConnect.Models
         public string? Contacto { get; set; }
 
         public string ContraseñaHash { get; set; }
+
+        public int IDRol { get; set; } // Nueva propiedad para el rol
     }
 }

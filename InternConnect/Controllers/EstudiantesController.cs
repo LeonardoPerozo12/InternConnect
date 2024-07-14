@@ -75,7 +75,8 @@
                     Telefono = registrarEstudianteDto.Telefono,
                     TipoDocumento = registrarEstudianteDto.TipoDocumento,
                     Documento = registrarEstudianteDto.Documento,
-                    ContraseñaHash = hashedPassword // Guardar la contraseña como hash
+                    ContraseñaHash = hashedPassword, // Guardar la contraseña como hash
+                    IDRol = 1 // Asignar el rol de Estudiante
                 };
 
                 // Agregar el estudiante a la base de datos

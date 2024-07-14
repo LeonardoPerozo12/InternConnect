@@ -40,7 +40,9 @@ namespace InternConnect.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Empresa>> GetEmpresa(int id)
         {
-            var empresa = await _context.Empresas.FindAsync(id);
+            var empresa = await _context.Empresas
+                                        .Include(e => e.Rol) // Incluir la carga del rol
+                                        .FirstOrDefaultAsync(e => e.IDEmpresa == id);
 
             if (empresa == null)
             {
@@ -183,7 +185,8 @@ namespace InternConnect.Controllers
                 Descripcion = registrarEmpresaDto.Descripcion,
                 ContraseñaHash = hashedPassword, // Guardar la contraseña como hash
                 FechaIngreso = DateTime.Now,
-                Verificacion = false // Por defecto, la empresa no está verificada
+                Verificacion = false,// Por defecto, la empresa no está verificada
+                IDRol = 2 // Asignar el rol de Empresa
             };
 
             // Agregar la empresa a la base de datos
@@ -212,7 +215,7 @@ namespace InternConnect.Controllers
             }
 
             // Verificar la contraseña
-            if (!BCrypt.Net.BCrypt.Verify(loginEmpresaDto.Contraseña, empresa.ContraseñaHash))
+            if (!BCrypt.Net.BCrypt.Verify(loginEmpresaDto.ContraseñaHash, empresa.ContraseñaHash))
             {
                 return Unauthorized("Credenciales inválidas.");
             }

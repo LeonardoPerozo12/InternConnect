@@ -8,6 +8,7 @@ namespace InternConnect.Context
         public InternConnectContext(DbContextOptions<InternConnectContext> options) : base(options)
         {
         }
+
         public DbSet<Aplicacion> Aplicaciones { get; set; }
         public DbSet<Beneficios> Beneficios { get; set; }
         public DbSet<BeneficiosPasantia> BeneficiosPasantias { get; set; }
@@ -17,7 +18,7 @@ namespace InternConnect.Context
         public DbSet<Pasantia> Pasantias { get; set; }
         public DbSet<TipoDocumento> TipoDocumentos { get; set; }
         public DbSet<Universidad> Universidades { get; set; }
-        // Agrega DbSet para otros modelos si es necesario
+        public DbSet<Rol> Roles { get; set; } // Agrega DbSet para Rol
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,7 +37,23 @@ namespace InternConnect.Context
                 entity.HasAlternateKey(e => new { e.IDEstudiante, e.IDPasantia });
             });
 
-        }
+            // Configurar la relación entre Estudiante y Rol
+            modelBuilder.Entity<Estudiante>()
+                .HasOne(e => e.Rol)
+                .WithMany()
+                .HasForeignKey(e => e.IDRol);
 
+            // Configurar la relación entre Empresa y Rol
+            modelBuilder.Entity<Empresa>()
+                .HasOne(e => e.Rol)
+                .WithMany()
+                .HasForeignKey(e => e.IDRol);
+
+            // Insertar roles predeterminados en la base de datos
+            modelBuilder.Entity<Rol>().HasData(
+                new Rol { IDRol = 1, Nombre = "Estudiante" },
+                new Rol { IDRol = 2, Nombre = "Empresa" }
+            );
+        }
     }
 }

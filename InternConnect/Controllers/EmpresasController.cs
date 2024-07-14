@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using InternConnect.Context;
 using InternConnect.Models;
+using InternConnect.DTO;
+using BCrypt.Net;
 
 namespace InternConnect.Controllers
 {
@@ -150,6 +152,72 @@ namespace InternConnect.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        // POST: api/Empresas/Register
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register(EmpresaDTO.RegistrarEmpresa registrarEmpresaDto)
+        {
+            // Validar el modelo recibido según las anotaciones de DataAnnotations
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Verificar si ya existe una empresa con el mismo correo
+            if (await _context.Empresas.AnyAsync(e => e.CorreoRRHH == registrarEmpresaDto.Correo))
+            {
+                return BadRequest("Ya existe una empresa registrada con este correo.");
+            }
+
+            // Hash de la contraseña utilizando BCrypt
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(registrarEmpresaDto.ContraseñaHash);
+
+            // Crear una instancia de Empresa con los datos del DTO
+            var empresa = new Empresa
+            {
+                Nombre = registrarEmpresaDto.Nombre,
+                CorreoRRHH = registrarEmpresaDto.Correo,
+                Direccion = registrarEmpresaDto.Direccion,
+                RNC = registrarEmpresaDto.RNC,
+                Descripcion = registrarEmpresaDto.Descripcion,
+                ContraseñaHash = hashedPassword, // Guardar la contraseña como hash
+                FechaIngreso = DateTime.Now,
+                Verificacion = false // Por defecto, la empresa no está verificada
+            };
+
+            // Agregar la empresa a la base de datos
+            _context.Empresas.Add(empresa);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetEmpresa", new { id = empresa.IDEmpresa }, empresa);
+        }
+
+        // POST: api/Empresas/Login
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(EmpresaDTO.LoginEmpresa loginEmpresaDto)
+        {
+            // Validar el modelo recibido según las anotaciones de DataAnnotations
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Buscar la empresa por correo
+            var empresa = await _context.Empresas.FirstOrDefaultAsync(e => e.CorreoRRHH == loginEmpresaDto.Correo);
+
+            if (empresa == null)
+            {
+                return NotFound("Empresa no encontrada.");
+            }
+
+            // Verificar la contraseña
+            if (!BCrypt.Net.BCrypt.Verify(loginEmpresaDto.Contraseña, empresa.ContraseñaHash))
+            {
+                return Unauthorized("Credenciales inválidas.");
+            }
+
+            return Ok(empresa);
         }
 
         private bool EmpresaExists(int id)

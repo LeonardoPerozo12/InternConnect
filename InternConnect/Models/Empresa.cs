@@ -25,5 +25,7 @@ namespace InternConnect.Models
         public DateTime FechaIngreso { get; set; }
 
         public string? Contacto { get; set; }
+
+        public string ContraseñaHash { get; set; }
     }
 }

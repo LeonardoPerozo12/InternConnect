@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -15,10 +16,15 @@ namespace InternConnect.Controllers
     public class EmpresasController : ControllerBase
     {
         private readonly InternConnectContext _context;
+        private readonly string _storagePath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
 
         public EmpresasController(InternConnectContext context)
         {
             _context = context;
+            if (!Directory.Exists(_storagePath))
+            {
+                Directory.CreateDirectory(_storagePath);
+            }
         }
 
         // GET: api/Empresas
@@ -43,7 +49,6 @@ namespace InternConnect.Controllers
         }
 
         // PUT: api/Empresas/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmpresa(int id, Empresa empresa)
         {
@@ -74,7 +79,6 @@ namespace InternConnect.Controllers
         }
 
         // POST: api/Empresas
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Empresa>> PostEmpresa(Empresa empresa)
         {
@@ -82,6 +86,44 @@ namespace InternConnect.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetEmpresa", new { id = empresa.IDEmpresa }, empresa);
+        }
+
+        // POST: api/Empresas/upload-logo/5
+        [HttpPost("upload-logo/{id}")]
+        public async Task<IActionResult> UploadLogo(int id, IFormFile file)
+        {
+            var empresa = await _context.Empresas.FindAsync(id);
+
+            if (empresa == null)
+            {
+                return NotFound();
+            }
+
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            var fileExtension = Path.GetExtension(file.FileName).ToLower();
+            if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png")
+            {
+                return BadRequest("Invalid file type. Only JPG and PNG are allowed.");
+            }
+
+            var fileName = $"{Guid.NewGuid()}{fileExtension}";
+            var filePath = Path.Combine(_storagePath, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // Solo guardamos el nombre del archivo
+            empresa.LogoEmpresa = fileName;
+            _context.Entry(empresa).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { fileName });
         }
 
         // DELETE: api/Empresas/5
@@ -92,6 +134,16 @@ namespace InternConnect.Controllers
             if (empresa == null)
             {
                 return NotFound();
+            }
+
+            if (!string.IsNullOrEmpty(empresa.LogoEmpresa))
+            {
+                var fileName = Path.GetFileName(new Uri(empresa.LogoEmpresa).LocalPath);
+                var filePath = Path.Combine(_storagePath, fileName);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
             }
 
             _context.Empresas.Remove(empresa);

@@ -24,8 +24,7 @@ namespace InternConnect.DTO
         }
         public class LoginEstudiante
         { 
-            [Required]
-            public string Nombre { get; set; }
+            
             [Required]
             [EmailAddress]
             public string? Correo { get; set; }

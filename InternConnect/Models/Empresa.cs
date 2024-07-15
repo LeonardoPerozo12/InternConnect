@@ -29,5 +29,6 @@ namespace InternConnect.Models
         public string ContraseñaHash { get; set; }
 
         public int IDRol { get; set; } // Nueva propiedad para el rol
+        public Rol Rol { get; set; } // Propiedad de navegación
     }
 }
